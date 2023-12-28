@@ -1,5 +1,5 @@
 import express from "express";
-import { createPostByUser,getPosts } from './post.controller';
+import { createPostByUser,getOwnPosts,getPosts } from './post.controller';
 const router = express.Router();
 
 router.post('/new/post',createPostByUser)

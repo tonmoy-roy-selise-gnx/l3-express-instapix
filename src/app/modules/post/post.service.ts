@@ -36,3 +36,13 @@ export const getAllPosts = async (loggedInUserId: any) => {
     return err;
   }
 };
+
+export const getOwnerPosts = async (userId: any) => {
+  try{
+    const posts=await InstaPost.find({userId:userId});
+    return posts;
+  }catch(err){
+    console.log(err);
+    return err;
+  }
+}

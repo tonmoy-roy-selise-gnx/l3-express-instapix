@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { createPost, getAllPosts } from "./post.service";
+import { createPost, getAllPosts, getOwnerPosts } from "./post.service";
 
 //create post by user
 export const createPostByUser = async (
@@ -31,6 +31,23 @@ export const getPosts=async(req:Request,res:Response)=>{
     })
 
   }catch (error: any) {
+    res.status(500).json({
+      status: "error",
+      error: error,
+    });
+  }
+}
+
+
+//retrive loggedin user own post
+export const getOwnPosts=async(req:Request,res:Response)=>{
+  try{
+    const ownPosts=await getOwnerPosts(req.params.userId);
+    return res.status(200).json({
+      status:"success",
+      ownPosts
+    })
+  }catch(error:any){
     res.status(500).json({
       status: "error",
       error: error,
