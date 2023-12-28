@@ -3,6 +3,8 @@ import { Request, json } from "express";
 import { v4 as uuidv4 } from 'uuid';
 import fs from 'fs';
 import path from 'path';
+import { promisify } from 'util';
+
 
 interface IMyFile {
     fieldname: string,
@@ -37,7 +39,7 @@ interface IReqData {
 
 export const getPreSignedUrlService = async (req: Request | any) => {
     try {
-        console.log("1st step working well", req.headers?.authorization);
+        // console.log("1st step working well", req.headers?.authorization);
         const files = req.files; // this is storage file in the application and need to remove after done
 
         const reqData: IReqData[] = [];
@@ -70,21 +72,21 @@ export const getPreSignedUrlService = async (req: Request | any) => {
 
         const promiseArr: Promise<any>[] = [];
 
-        // const saveRes = await saveFileService(getUploadRequestUrl?.data, files);
         getUploadRequestUrl.data.map((item: any, index: number) => {
             promiseArr.push(saveFileService(item?.UploadUrl, files[index]));
+
+            fs.unlink(files[index].path, err => {
+                if (err) {
+                    console.error(err);
+                } else {
+                    console.log(`File ${files[index].filename} deleted successfully!`);
+                }
+            });
         })
 
         const uploaded = await Promise.all(promiseArr);
 
-        // files.map(((item: IMyFile) => {
-        //     fs.unlink(item.destination, () => {
-        //         console.log("working");
-        //     })
-        // }))
-
         console.log("everything is ok", fileIds, uploaded);
-
         return fileIds;
 
     } catch (error) {
@@ -119,7 +121,7 @@ export const saveFileService = async (url: string, file: any) => {
 
 export const getFile = async (req: Request | any, fileId: string) => {
     try {
-        console.log('token from client',req.headers.authorization)
+        // console.log('token from client', req.headers.authorization)
         const response = await axios.get(`http://microservices.seliselocal.com/api/storageservice/v22/StorageService/StorageQuery/GetFile?FileId=${fileId}`, {
             headers: {
                 'Authorization': `${req.headers.token}`
@@ -136,7 +138,7 @@ export const getFile = async (req: Request | any, fileId: string) => {
 export const getFiles = async (req: Request | any, fileIds: string) => {
     try {
         console.log(req.body)
-        console.log('token from client',req.headers.authorization)
+        console.log('token from client', req.headers.authorization)
         const response = await axios.post(`http://microservices.seliselocal.com/api/storageservice/v22/StorageService/StorageQuery/GetFiles`, {
             headers: {
                 'Authorization': `${req.headers.authorization}`,

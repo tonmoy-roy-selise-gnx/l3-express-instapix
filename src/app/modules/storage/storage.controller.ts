@@ -4,7 +4,6 @@ import { getFile, getFiles, getPreSignedUrlService, parsedImageUrl, saveFileServ
 
 export const uploadFile = async (req: Request | any, res: Response, next: NextFunction) => {
     try {
-        // console.log(req.files, req.body?.disc);
         const file = req.files;
         if (file.length <= 0) {
             return res.status(400).json({
@@ -47,7 +46,7 @@ export const uploadFile = async (req: Request | any, res: Response, next: NextFu
 export const imageParser = async (req: Request | any, res: Response) => {
     try {
         const fileId = req.body.fileId;
-        //console.log('file id',fileId);
+        // console.log('file id',fileId);
         // console.log(`${req.headers.token}`)
         const fileUrl = await getFile(req, fileId);
 
@@ -61,14 +60,14 @@ export const imageParser = async (req: Request | any, res: Response) => {
 }
 
 
-//Multi Image Array parser
+// Multi Image Array parser
 export const multiImageParser = async (req: Request | any, res: Response) => {
-    try{
+    try {
         const fileIds = req.body.FileIds;
         const fileUrls = await getFiles(req, fileIds);
 
         res.status(200).json(fileUrls);
-    }catch(error: any){
+    } catch (error: any) {
         return res.status(500).json({
             status: "error",
             error: error
