@@ -1,10 +1,8 @@
 import axios from "axios";
-import { Request, json } from "express";
+import { Request } from "express";
 import { v4 as uuidv4 } from 'uuid';
 import fs from 'fs';
 import path from 'path';
-import { promisify } from 'util';
-
 
 interface IMyFile {
     fieldname: string,
@@ -23,19 +21,6 @@ interface IReqData {
     Name: string,
     Tags: string[]
 }
-
-// const removeFile =(directoryPath:string) =>{
-//     fs.unlink(directoryPath, (err) => {
-//         if (err) {
-
-//         }
-
-//         res.status(200).send({
-//           message: "File is deleted.",
-//         });
-//       });
-// }
-
 
 export const getPreSignedUrlService = async (req: Request | any) => {
     try {
@@ -86,7 +71,7 @@ export const getPreSignedUrlService = async (req: Request | any) => {
 
         const uploaded = await Promise.all(promiseArr);
 
-        console.log("everything is ok", fileIds, uploaded);
+        // console.log("everything is ok", fileIds, uploaded);
         return fileIds;
 
     } catch (error) {
@@ -118,7 +103,6 @@ export const saveFileService = async (url: string, file: any) => {
     }
 }
 
-
 export const getFile = async (req: Request | any, fileId: string) => {
     try {
         // console.log('token from client', req.headers.authorization)
@@ -133,7 +117,6 @@ export const getFile = async (req: Request | any, fileId: string) => {
         throw error;
     }
 }
-
 
 export const getFiles = async (req: Request | any, fileIds: string) => {
     try {
