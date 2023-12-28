@@ -5,6 +5,8 @@ const router = express.Router();
 router.post('/new/post',createPostByUser)
 router.get('/posts/:loggedInUserId',getPosts)
 
+//users own post will show
+router.get('/own/posts/:userId',getOwnPosts)
 
 // router.post('/register-google-user', googleAuthentication, registerByGoogle);
 // router.post('/registration-request', registerRequest)
