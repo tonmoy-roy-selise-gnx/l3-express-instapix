@@ -1,13 +1,9 @@
-import { Request, Response, NextFunction } from "express";
-// import { useIAM } from "./user.service";
+import { Request, Response } from "express";
 import { IAMService } from "../../services/iam.services";
-import { followingUser, insertUser, loggedIn, userSuggestions } from "./user.service";
+import { followingUser, insertUser, userSuggestions } from "./user.service";
+import { MyRequest } from "../../../middleware/authentication.middleware";
 
-export const useIAMController = async (
-  req: Request | any,
-  res: Response,
-  next: NextFunction
-) => {
+export const useIAMController = async (req: Request, res: Response) => {
   try {
     const response = await IAMService(req);
 
@@ -27,11 +23,6 @@ export const useIAMController = async (
     res.status(response.status).json(response.data);
   } catch (error: any) {
     if (error.response) {
-      // The request was made and the server responded with a status code
-      // that falls out of the range of 2xx
-      // console.log(error.response.data);
-      // console.log(error.response.status);
-      // console.log(error.response.headers);
 
       return res.status(error?.response?.status).json({
         status: "error",
@@ -50,45 +41,23 @@ export const useIAMController = async (
     } else {
       // Something happened in setting up the request that triggered an Error
       console.log("Error", error.message);
+      // console.log(error.config);
 
       return res.status(500).json({
         status: "error",
         error: error.message,
       });
     }
-
-    // console.log(error.config);
-
-    // return res.status(500).json({
-    //     status: "error",
-    //     error: error
-    // })
   }
 };
 
-// export const shopsData = async (req: Request | any, res: Response, next: NextFunction) => {
-//     try {
-//         const resultData = await useIAM();
-
-//         res.status(200).json(resultData);
-//     } catch (error: any) {
-//         return res.status(500).json({
-//             status: "error",
-//             error: error
-//         })
-//     }
-
-//     // return res.status(response.status).json(response.data);
-// }
-
 // creating insta user after registration
-
 export const createInstaUser = async (
   req: Request,
   res: Response
 ) => {
   try {
-    const userData  = await insertUser(req.body);
+    const userData = await insertUser(req.body);
 
     res.status(200).json({
       status: "success",
@@ -99,16 +68,10 @@ export const createInstaUser = async (
   }
 };
 
-//get loggedin user data from microservice
-export const loggedInUser=async (
-  req: Request | any,
-  res: Response
-) => {
+//get loggedIn user data from microservice
+export const loggedInUser = async (req: MyRequest, res: Response) => {
   try {
-
-    const response = await loggedIn(req);
-
-    res.status(200).json(response.data);
+    res.status(200).json(req?.userData);
   } catch (error) {
     return res.status(500).json({ error });
   }
@@ -116,27 +79,21 @@ export const loggedInUser=async (
 
 
 //get follow suggestions for a user who is logged in and give suggestion if he is not yet following the user
-export const getSuggestions=async (
-  req: Request,
-  res: Response
-) => {
+export const getSuggestions = async (req: Request, res: Response) => {
   try {
-    const  {loggedInUser}  = req.query;
+    const { loggedInUser } = req.query;
 
     const suggestions = await userSuggestions(loggedInUser);
 
-    return res.status(200).json({success:true,suggestions});
+    return res.status(200).json({ success: true, suggestions });
 
   } catch (error) {
-    return res.status(500).json({ error});
+    return res.status(500).json({ error });
   }
 };
 
 //make a user follow another user
-export const followUser=async (
-  req: Request,
-  res: Response
-)=> {
+export const followUser = async (req: Request, res: Response) => {
   try {
     const { loggedInUser, userToFollow } = req.body;
 

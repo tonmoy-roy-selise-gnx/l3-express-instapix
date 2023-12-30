@@ -1,6 +1,4 @@
-import { Request, Response, NextFunction } from "express";
 import InstaUser, { IUser } from "./user.model";
-import axios from "axios";
 // import Shops from "./user.model";
 
 // export const useIAM = async () => {
@@ -30,30 +28,10 @@ export const insertUser = async (userData: IUser) => {
   }
 };
 
-export const loggedIn=async (req: Request | any) => {
-  try{
-    const headers = {
-      "Host": "misterloo.seliselocal.com",
-      "Origin": "http://misterloo.seliselocal.com",
-      "Referer": "http://misterloo.seliselocal.com/login",
-      "Authorization": req.headers.authorization
-    };
-    // Define the URL for your POST request
-    const url = 'http://misterloo.seliselocal.com/api/identity/v20/identity/Authentication/GetLoggedInUser';
-
-    // Make a POST request with custom headers using Axios
-    const response = await axios.get(url, { headers });
-    return response;
-
-  }catch (error: any) {
-    return error;
-  }
-}
-
 export const userSuggestions = async (loggedInUser: any) => {
   try {
-     //get all the users excluding the logged in user
-     const appUsers = await InstaUser.find({
+    //get all the users excluding the logged in user
+    const appUsers = await InstaUser.find({
       userId: { $ne: loggedInUser },
     });
 
@@ -70,10 +48,10 @@ export const userSuggestions = async (loggedInUser: any) => {
 }
 
 
-export const followingUser = async (loggedInUser: string,userToFollow:string) => {
+export const followingUser = async (loggedInUser: string, userToFollow: string) => {
   try {
 
-   // je follow kortey gesey arek user k tar following a shei user add hobey
+    // je follow kortey gesey arek user k tar following a shei user add hobey
     //first check if the user is already following the user
     const user = await InstaUser.findOneAndUpdate(
       { userId: loggedInUser },

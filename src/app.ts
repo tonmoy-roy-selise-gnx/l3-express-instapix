@@ -8,12 +8,10 @@ import postRouter from './app/modules/post/post.router';
 const app: Application = express();
 
 // using cors
-app.use(cors(
-    // {
-    //     origin: true,
-    //     credentials: true
-    // }
-));
+app.use(cors({
+    origin: "*",
+    credentials: true
+}));
 app.use(cookieParser());
 
 // parse data
