@@ -4,7 +4,7 @@ import express from "express";
 const router = express.Router();
 
 router.post('/auth', useIAMController);
-router.get('/auth/loggedin/user', authentication, loggedInUser);
+router.get('/auth/loggedin/user', loggedInUser);
 // router.get('/shops', shopsData);
 router.post('/new/user', createInstaUser)
 //loggedin user will get the follow suggestion if he doesn't follow them

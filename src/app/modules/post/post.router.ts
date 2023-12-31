@@ -1,13 +1,19 @@
 import express from "express";
-import { createPostByUser, getOwnPosts, getPosts } from './post.controller';
+import { createPostByUser, getIndividualPost, getOwnPosts, getPosts, likePost } from './post.controller';
 import { authentication } from "../../../middleware/authentication.middleware";
 const router = express.Router();
 
-router.post('/new/post', authentication, createPostByUser);
+router.post('/new/post', createPostByUser);
 
 router.get('/posts/:loggedInUserId', getPosts)
 
 //users own post will show
-router.get('/own/posts/:userId', getOwnPosts);
+router.get('/own/posts/:userName',getOwnPosts)
+
+//individual post
+router.get('/post/:postId',getIndividualPost)
+
+//like or unlike a post by user
+router.post('/like/:postId',likePost)
 
 export default router;
