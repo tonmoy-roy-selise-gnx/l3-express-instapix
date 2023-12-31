@@ -2,10 +2,15 @@ import InstaUser from "../user/user.model";
 import InstaPost from "./post.model";
 import { IPost } from "./post.model";
 
-export const createPost = async (reqData: IPost) => {
+export const createPost = async (req: IPost) => {
   try {
-    const { userId, files, content } = reqData;
-    const data = await InstaPost.create({ userId, files, content });
+    const data = await InstaPost.create({
+      userId: req.userId,
+      files: req.files,
+      content: req.content,
+      userName: req.userName,
+      userEmail: req.userEmail,
+    });
     return data;
   } catch (err) {
     console.log(err);
@@ -15,7 +20,6 @@ export const createPost = async (reqData: IPost) => {
 
 export const getAllPosts = async (loggedInUserId: any) => {
   try {
-
     const loggedInUser = await InstaUser.findOne({
       userId: loggedInUserId,
     });
@@ -25,7 +29,9 @@ export const getAllPosts = async (loggedInUserId: any) => {
           { userId: { $in: loggedInUser.following } },
           { userId: loggedInUserId },
         ],
-      });
+      })
+        .sort({ createdAt: -1 }) // Sorting by createdAt field in descending order
+        .exec();
       return posts;
     }
   } catch (err) {
@@ -43,7 +49,6 @@ export const getOwnerPosts = async (userName: any) => {
     return err;
   }
 };
-
 
 export const getPost = async (postId: any) => {
   try {
@@ -75,4 +80,3 @@ export const likingPost = async (postId: any, userId: any) => {
     return err;
   }
 };
-

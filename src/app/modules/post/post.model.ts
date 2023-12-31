@@ -8,15 +8,19 @@ export interface IPost {
     userId: string;
     comment: string;
   }];
-  likedBy: object[];
+  likedBy: string[];
   likes: number;
   files: Array<string>;
+  userName: string;
+  userEmail: string;
 }
 // 2. Create a Schema corresponding to the document interface.
 const postSchema = new Schema<IPost>(
   {
     userId: {
       type: String,
+      // type: Schema.Types.ObjectId,
+      // ref: "InstUser",
     },
     files: {
       type: [String],
@@ -31,14 +35,20 @@ const postSchema = new Schema<IPost>(
       }], // Use an array of strings
     },
     likedBy: {
-      type: [Object], // Use an array of strings
+      type: [String],
     },
     likes: {
       type: Number,
       default: 0,
     },
+    userName: {
+      type: String,
+    },
+    userEmail: {
+      type: String,
+    },
   },
-  { minimize: false, timestamps: true, collection: 'InstaPosts' }
+  { minimize: false, timestamps: true,collection: 'InstaPosts' }
 );
 /*
   minimize option is used within a schema to control whether 
