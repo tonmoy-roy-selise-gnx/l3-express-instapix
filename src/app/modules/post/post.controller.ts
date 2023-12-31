@@ -1,19 +1,14 @@
 import { Request, Response, NextFunction } from "express";
-import { createPost, getAllPosts, getOwnerPosts, getPost, likingPost } from "./post.service";
-import { MyRequest } from "../../../middleware/authentication.middleware";
+import { createPost, getAllPosts,getOwnerPosts, getPost, likingPost } from "./post.service";
 
 //create post by user
 export const createPostByUser = async (
-  req: MyRequest,
+  req: Request,
   res: Response,
 ) => {
   try {
-    if (!req?.userData) {
-      throw new Error("user not valid");
-    }
-    const reqData = { ...req.body, userId: req?.userData.UserId }
-    const response = await createPost(reqData);
-    return res.status(200).json({
+    const response = await createPost(req.body);
+    res.status(200).json({
       status: "success",
       post: response,
     });
@@ -26,16 +21,16 @@ export const createPostByUser = async (
 };
 
 //retrive loggedin user and his follwings post
-export const getPosts = async (req: Request, res: Response) => {
-  try {
-    const { loggedInUserId } = req.params;
-    const respons = await getAllPosts(loggedInUserId);
+export const getPosts=async(req:Request,res:Response)=>{
+  try{
+    const {loggedInUserId}=req.params;
+    const respons=await getAllPosts(loggedInUserId);
     return res.status(200).json({
-      status: "success",
-      posts: respons
+      status:"success",
+      posts:respons
     })
 
-  } catch (error: any) {
+  }catch (error: any) {
     res.status(500).json({
       status: "error",
       error: error,
@@ -96,4 +91,3 @@ export const likePost=async(req:Request,res:Response)=>{
     });
   }
 }
-
