@@ -1,17 +1,13 @@
 import express from "express";
-import { createPostByUser,getOwnPosts,getPosts } from './post.controller';
+import { createPostByUser, getOwnPosts, getPosts } from './post.controller';
+import { authentication } from "../../../middleware/authentication.middleware";
 const router = express.Router();
 
-router.post('/new/post',createPostByUser)
-router.get('/posts/:loggedInUserId',getPosts)
+router.post('/new/post', authentication, createPostByUser);
+
+router.get('/posts/:loggedInUserId', getPosts)
 
 //users own post will show
-router.get('/own/posts/:userId',getOwnPosts)
-
-// router.post('/register-google-user', googleAuthentication, registerByGoogle);
-// router.post('/registration-request', registerRequest)
-// router.post('/registration-confirm', registerUser)
-// router.get('/data', authentication, getUserByToken)
-// router.patch('/update', authentication, updateUserByToken);
+router.get('/own/posts/:userId', getOwnPosts);
 
 export default router;

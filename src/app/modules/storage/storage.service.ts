@@ -154,7 +154,7 @@ export const parsedImageUrl = async (req: Request | any) => {
                     'Accept': '*/*',
                 },
             });
-            console.log(response)
+            // console.log(response)
 
 
             return response.data;

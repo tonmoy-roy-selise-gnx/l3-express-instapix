@@ -2,13 +2,10 @@ import InstaUser from "../user/user.model";
 import InstaPost from "./post.model";
 import { IPost } from "./post.model";
 
-export const createPost = async (req: IPost) => {
+export const createPost = async (reqData: IPost) => {
   try {
-    const data = await InstaPost.create({
-      userId: req.userId,
-      files: req.files,
-      content: req.content,
-    });
+    const { userId, files, content } = reqData;
+    const data = await InstaPost.create({ userId, files, content });
     return data;
   } catch (err) {
     console.log(err);
@@ -38,10 +35,10 @@ export const getAllPosts = async (loggedInUserId: any) => {
 };
 
 export const getOwnerPosts = async (userId: any) => {
-  try{
-    const posts=await InstaPost.find({userId:userId});
+  try {
+    const posts = await InstaPost.find({ userId: userId });
     return posts;
-  }catch(err){
+  } catch (err) {
     console.log(err);
     return err;
   }

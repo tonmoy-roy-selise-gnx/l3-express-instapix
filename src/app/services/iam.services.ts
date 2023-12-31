@@ -38,7 +38,7 @@ export const loggedInUserData = async (req: Request) => {
             }
         });
 
-        console.log(response);
+        // console.log(response);
         return response.data;
 
     } catch (error: any) {
