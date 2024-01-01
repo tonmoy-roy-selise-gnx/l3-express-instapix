@@ -13,21 +13,21 @@ export const createPost = async (req: IPost) => {
     });
     return data;
   } catch (err) {
-    console.log(err);
+    // console.log(err);
     throw err;
   }
 };
 
-export const getAllPosts = async (loggedInUserId: any) => {
+export const getAllPosts = async (userId: string) => {
   try {
     const loggedInUser = await InstaUser.findOne({
-      userId: loggedInUserId,
+      userId: userId,
     });
     if (loggedInUser) {
       const posts = await InstaPost.find({
         $or: [
           { userId: { $in: loggedInUser.following } },
-          { userId: loggedInUserId },
+          { userId: userId },
         ],
       })
         .sort({ createdAt: -1 }) // Sorting by createdAt field in descending order
@@ -40,9 +40,11 @@ export const getAllPosts = async (loggedInUserId: any) => {
   }
 };
 
-export const getOwnerPosts = async (userName: any) => {
+export const getOwnerPosts = async (userId: string) => {
   try {
-    const posts = await InstaPost.find({ userName });
+    const posts = await InstaPost.find({
+      userId: userId,
+    });
     return posts;
   } catch (err) {
     console.log(err);
@@ -63,7 +65,7 @@ export const getPost = async (postId: any) => {
 export const likingPost = async (postId: any, userId: any) => {
   try {
     const post = await InstaPost.findOne({ _id: postId });
-    if (post) {
+    if (post?.likedBy) {
       if (post.likedBy.includes(userId)) {
         const index = post.likedBy.indexOf(userId);
         post.likedBy.splice(index, 1);

@@ -21,7 +21,7 @@ app.use(express.urlencoded({ extended: true }));
 // Application Router
 app.use('/user', userRouter);
 app.use('/storage', storageRouter);
-app.use('/insta/user', postRouter);
-
+// app.use('/insta/user', postRouter);
+app.use('/posts', postRouter);
 
 export default app;

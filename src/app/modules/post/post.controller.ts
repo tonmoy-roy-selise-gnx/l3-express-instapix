@@ -1,13 +1,27 @@
 import { Request, Response, NextFunction } from "express";
-import { createPost, getAllPosts,getOwnerPosts, getPost, likingPost } from "./post.service";
+import { createPost, getAllPosts, getOwnerPosts, getPost, likingPost } from "./post.service";
+import { MyRequest } from "../../../middleware/authentication.middleware";
+import { IPost } from "./post.model";
 
 //create post by user
 export const createPostByUser = async (
-  req: Request,
+  req: MyRequest,
   res: Response,
 ) => {
   try {
-    const response = await createPost(req.body);
+    if (!req?.userData) {
+      throw new Error("Token Not Authentic");
+    };
+
+    const reqData: IPost = {
+      userId: req.userData.UserId,
+      files: req.body.files,
+      content: req.body.content,
+      userName: req.userData.UserName,
+      userEmail: req.userData.Email,
+    };
+
+    const response = await createPost(reqData);
     res.status(200).json({
       status: "success",
       post: response,
@@ -21,16 +35,17 @@ export const createPostByUser = async (
 };
 
 //retrive loggedin user and his follwings post
-export const getPosts=async(req:Request,res:Response)=>{
-  try{
-    const {loggedInUserId}=req.params;
-    const respons=await getAllPosts(loggedInUserId);
+export const getPosts = async (req: MyRequest, res: Response) => {
+  try {
+    if (!req?.userData?.UserId) {
+      throw new Error('Token Not Authentic');
+    }
+    const response = await getAllPosts(req?.userData?.UserId);
     return res.status(200).json({
-      status:"success",
-      posts:respons
+      status: "success",
+      posts: response
     })
-
-  }catch (error: any) {
+  } catch (error: any) {
     res.status(500).json({
       status: "error",
       error: error,
@@ -40,14 +55,19 @@ export const getPosts=async(req:Request,res:Response)=>{
 
 
 //retrive loggedin user own post
-export const getOwnPosts=async(req:Request,res:Response)=>{
-  try{
-    const ownPosts=await getOwnerPosts(req.params.userName);
+export const getOwnPosts = async (req: MyRequest, res: Response) => {
+
+  try {
+    if (!req?.userData?.UserId) {
+      throw new Error('Token Not Authentic');
+    }
+
+    const ownPosts = await getOwnerPosts(req?.userData?.UserId);
     return res.status(200).json({
-      status:"success",
+      status: "success",
       ownPosts
     })
-  }catch(error:any){
+  } catch (error: any) {
     res.status(500).json({
       status: "error",
       error: error,
@@ -56,15 +76,16 @@ export const getOwnPosts=async(req:Request,res:Response)=>{
 }
 
 //get individual post
-export const getIndividualPost=async(req:Request,res:Response)=>{
-  try{
-    const {postId}=req.params;
-    const post=await getPost(postId);
+export const getIndividualPost = async (req: Request, res: Response) => {
+  try {
+    const { postId } = req.params;
+
+    const post = await getPost(postId);
     return res.status(200).json({
-      status:"success",
+      status: "success",
       post
     })
-  }catch(error:any){
+  } catch (error: any) {
     res.status(500).json({
       status: "error",
       error: error,
@@ -74,17 +95,20 @@ export const getIndividualPost=async(req:Request,res:Response)=>{
 
 
 //like or unlike a post by user
-export const likePost=async(req:Request,res:Response)=>{
-  try{
-    const {postId}=req.params;
-    const {userId}=req.body;
-    console.log('---------------->',postId,userId)
-    const like=await likingPost(postId,userId);
+export const likePost = async (req: MyRequest, res: Response) => {
+  try {
+    const { postId } = req.params;
+    if (!req?.userData?.UserId) {
+      throw new Error('Token Not Authentic');
+    };
+
+    console.log('---------------->', postId, req?.userData?.UserId)
+    const like = await likingPost(postId, req?.userData?.UserId);
     return res.status(200).json({
-      status:"success",
+      status: "success",
       like
     })
-  }catch(error:any){
+  } catch (error: any) {
     res.status(500).json({
       status: "error",
       error: error,

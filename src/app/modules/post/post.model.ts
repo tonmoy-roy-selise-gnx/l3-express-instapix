@@ -4,12 +4,12 @@ import { Schema, model } from "mongoose";
 export interface IPost {
   userId: string;
   content: string;
-  comment: [{
+  comment?: [{
     userId: string;
     comment: string;
   }];
-  likedBy: string[];
-  likes: number;
+  likedBy?: string[];
+  likes?: number;
   files: Array<string>;
   userName: string;
   userEmail: string;
@@ -48,7 +48,7 @@ const postSchema = new Schema<IPost>(
       type: String,
     },
   },
-  { minimize: false, timestamps: true,collection: 'InstaPosts' }
+  { minimize: false, timestamps: true, collection: 'InstaPosts' }
 );
 /*
   minimize option is used within a schema to control whether 
