@@ -1,6 +1,8 @@
+import axios from "axios";
 import InstaUser from "../user/user.model";
 import InstaPost from "./post.model";
 import { IPost } from "./post.model";
+import { MyRequest } from "../../../middleware/authentication.middleware";
 
 export const createPost = async (req: IPost) => {
   try {
@@ -77,6 +79,56 @@ export const likingPost = async (postId: any, userId: any) => {
         return post;
       }
     }
+  } catch (err) {
+    console.log(err);
+    return err;
+  }
+};
+
+export const updatingPost = async (req: Request | any) => {
+  try {
+    const { postId } = req.params;
+    const { userId, content } = req.body;
+    const post = await InstaPost.findOne({ _id: postId, userId });
+    if (post) {
+      post.content = content;
+      await post.save();
+      return post;
+    }
+  } catch (err) {
+    console.log(err);
+    return err;
+  }
+}
+
+export const deletingPost = async (req: MyRequest) => {
+  try {
+    if (!req?.userData?.UserId) {
+      throw new Error('Token Not Authentic');
+    };
+
+
+    const post = await InstaPost.findOne({ _id: req.params.postId });
+    console.log(post, { _id: req.params.postId, userId: req?.userData?.UserId });
+
+    const getUploadRequestUrl = await axios.post("http://microservices.seliselocal.com/api/storageservice/v22/StorageService/StorageCommand/DeleteAll",
+      {
+        "ItemIds": post?.files
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          "Host": "misterloo.seliselocal.com",
+          'Authorization': `${req.headers?.authorization}`,
+          'accept': 'application/json'
+        },
+      });
+    // console.log("=================================================================");
+    // console.log(getUploadRequestUrl.data);
+
+    const deleted = await InstaPost.deleteOne({ _id: req.params.postId, userId: req?.userData?.UserId });
+    return deleted;
+    // return "deleted";
   } catch (err) {
     console.log(err);
     return err;

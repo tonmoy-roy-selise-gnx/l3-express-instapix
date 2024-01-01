@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { createPost, getAllPosts, getOwnerPosts, getPost, likingPost } from "./post.service";
+import { createPost, deletingPost, getAllPosts, getOwnerPosts, getPost, likingPost, updatingPost } from "./post.service";
 import { MyRequest } from "../../../middleware/authentication.middleware";
 import { IPost } from "./post.model";
 
@@ -53,7 +53,6 @@ export const getPosts = async (req: MyRequest, res: Response) => {
   }
 }
 
-
 //retrive loggedin user own post
 export const getOwnPosts = async (req: MyRequest, res: Response) => {
 
@@ -93,7 +92,6 @@ export const getIndividualPost = async (req: Request, res: Response) => {
   }
 }
 
-
 //like or unlike a post by user
 export const likePost = async (req: MyRequest, res: Response) => {
   try {
@@ -108,6 +106,37 @@ export const likePost = async (req: MyRequest, res: Response) => {
       status: "success",
       like
     })
+  } catch (error: any) {
+    res.status(500).json({
+      status: "error",
+      error: error,
+    });
+  }
+}
+
+export const updatePost = async (req: MyRequest, res: Response) => {
+  try {
+    const updated = await updatingPost(req);
+    return res.status(200).json({
+      status: "success",
+      updated
+    })
+  } catch (error: any) {
+    res.status(500).json({
+      status: "error",
+      error: error,
+    });
+  }
+}
+
+export const deletePost = async (req: MyRequest, res: Response) => {
+  try {
+    const deleted = await deletingPost(req);
+    return res.status(200).json({
+      status: "success",
+      deleted
+    })
+
   } catch (error: any) {
     res.status(500).json({
       status: "error",
