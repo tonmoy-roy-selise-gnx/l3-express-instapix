@@ -77,13 +77,15 @@ export const loggedInUser = async (req: MyRequest, res: Response) => {
   }
 };
 
-
 //get follow suggestions for a user who is logged in and give suggestion if he is not yet following the user
-export const getSuggestions = async (req: Request, res: Response) => {
+export const getSuggestions = async (req: MyRequest, res: Response) => {
   try {
-    const { loggedInUser } = req.query;
+    // const { loggedInUser } = req.query;
+    if (!req?.userData) {
+      throw new Error('user id not found ')
+    }
 
-    const suggestions = await userSuggestions(loggedInUser);
+    const suggestions = await userSuggestions(req?.userData.UserId);
 
     return res.status(200).json({ success: true, suggestions });
 
