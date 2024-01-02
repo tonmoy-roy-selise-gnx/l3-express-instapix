@@ -1,3 +1,4 @@
+import InstaPost from "../post/post.model";
 import InstaUser, { IUser } from "./user.model";
 // import Shops from "./user.model";
 
@@ -68,6 +69,22 @@ export const followingUser = async (loggedInUser: string, userToFollow: string) 
 
     return user;
   } catch (error: any) {
+    return error;
+  }
+}
+
+
+export const individualUserDetails=async(userName:string)=>{
+  try{
+    console.log(userName)
+    const user=await InstaUser.findOne({userName});
+
+    //calculate how many post a user did by using userName
+    const totalPost=await InstaPost.find({userName}).countDocuments();
+    
+    return {user,totalPost}
+
+  }catch(error:any){
     return error;
   }
 }

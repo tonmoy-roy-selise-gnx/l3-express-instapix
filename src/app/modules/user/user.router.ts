@@ -1,5 +1,5 @@
 import { authentication } from '../../../middleware/authentication.middleware';
-import { createInstaUser, useIAMController, getSuggestions, followUser, loggedInUser } from './user.controllet';
+import { createInstaUser, useIAMController, getSuggestions, followUser, loggedInUser, userDetails } from './user.controllet';
 import express from "express";
 const router = express.Router();
 
@@ -13,5 +13,8 @@ router.get('/auth/loggedin/user', loggedInUser);
 router.get('/suggestions', getSuggestions)
 //follow a user
 router.post('/follow', followUser);
+
+//each user details get
+router.get('/details/:userName',userDetails)
 
 export default router;
