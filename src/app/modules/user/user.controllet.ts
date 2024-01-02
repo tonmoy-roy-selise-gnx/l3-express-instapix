@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { IAMService } from "../../services/iam.services";
-import { followingUser, individualUserDetails, insertUser, userSuggestions } from "./user.service";
+import { followingUser, individualUserDetails, insertUser, userDetailsUpdate, userSuggestions } from "./user.service";
 import { MyRequest } from "../../../middleware/authentication.middleware";
 
 export const useIAMController = async (req: Request, res: Response) => {
@@ -111,11 +111,28 @@ export const followUser = async (req: Request, res: Response) => {
 export const userDetails=async( req:Request,res:Response)=>{
   try{
     const {userName}=req.params;
+    //console.log(userName);
     const details=await individualUserDetails(userName);
 
     return res.status(200).json({
       status:"success",
       details
+    })
+  }catch(error:any){
+    res.status(500).json({
+      status: "error",
+      error: error,
+    });
+  }
+}
+
+export const updateUser=async(req:MyRequest,res:Response)=>{
+  try{
+
+    const user= await userDetailsUpdate(req)
+    return res.status(200).json({
+      status:"success",
+      user
     })
   }catch(error:any){
     res.status(500).json({

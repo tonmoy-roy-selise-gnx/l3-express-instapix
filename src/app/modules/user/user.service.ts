@@ -1,3 +1,4 @@
+import { MyRequest } from "../../../middleware/authentication.middleware";
 import InstaPost from "../post/post.model";
 import InstaUser, { IUser } from "./user.model";
 // import Shops from "./user.model";
@@ -88,3 +89,25 @@ export const individualUserDetails=async(userName:string)=>{
     return error;
   }
 }
+
+export const userDetailsUpdate=async(req:MyRequest)=>{
+  try{
+    const userId=req?.userData?.UserId;
+    const {displayName,bio,phone,avatar}=req.body;
+
+    const user=await InstaUser.findOneAndUpdate(
+      {userId},
+      {
+        displayName:displayName,
+        userPhone:phone,
+        avatar,
+        bio,
+      },
+      {new:true}
+    );
+
+    return user;
+  }catch(error:any){
+    return error;
+  }
+} 
