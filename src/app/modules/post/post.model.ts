@@ -13,6 +13,7 @@ export interface IPost {
   files: Array<string>;
   userName: string;
   userEmail: string;
+  avatar?: string[];
 }
 // 2. Create a Schema corresponding to the document interface.
 const postSchema = new Schema<IPost>(
@@ -46,6 +47,9 @@ const postSchema = new Schema<IPost>(
     },
     userEmail: {
       type: String,
+    },
+    avatar: {
+      type: [String],
     },
   },
   { minimize: false, timestamps: true, collection: 'InstaPosts' }

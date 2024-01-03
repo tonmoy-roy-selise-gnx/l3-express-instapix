@@ -108,7 +108,7 @@ export const getFile = async (req: Request | any, fileId: string) => {
         // console.log('token from client', req.headers.authorization)
         const response = await axios.get(`http://microservices.seliselocal.com/api/storageservice/v22/StorageService/StorageQuery/GetFile?FileId=${fileId}`, {
             headers: {
-                'Authorization': `${req.headers.token}`
+                'Authorization': `${req.headers.authorization}`
             },
         });
         return response.data;

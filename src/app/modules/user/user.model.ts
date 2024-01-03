@@ -15,7 +15,9 @@ export interface IUser {
   userName: string;
   followers: any; //followers:Array<object>, Array<Schema.Types.ObjectId>;
   following: any; //following:Array<object>, Schema.Types.ObjectId;
-  avatar: string;
+  avatar: {
+    type: [String],
+  };
   bio: string;
   displayName: string;
 }
@@ -43,7 +45,7 @@ const instaUserSchema = new Schema<IUser>(
       },
     ],
     avatar: {
-      type: String,
+      type: [String],
     },
     bio: {
       type: String,

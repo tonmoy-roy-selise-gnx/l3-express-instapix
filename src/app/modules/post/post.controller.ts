@@ -19,6 +19,7 @@ export const createPostByUser = async (
       content: req.body.content,
       userName: req.userData.UserName,
       userEmail: req.userData.Email,
+      avatar: req.body.avatar
     };
 
     const response = await createPost(reqData);

@@ -100,8 +100,8 @@ export const userDetailsUpdate=async(req:MyRequest)=>{
       {
         displayName:displayName,
         userPhone:phone,
-        avatar,
         bio,
+        avatar
       },
       {new:true}
     );

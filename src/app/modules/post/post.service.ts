@@ -12,6 +12,7 @@ export const createPost = async (req: IPost) => {
       content: req.content,
       userName: req.userName,
       userEmail: req.userEmail,
+      avatar: req.avatar,
     });
     return data;
   } catch (err) {

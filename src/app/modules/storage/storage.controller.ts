@@ -46,7 +46,7 @@ export const uploadFile = async (req: Request | any, res: Response, next: NextFu
 export const imageParser = async (req: Request | any, res: Response) => {
     try {
         const fileId = req.body.fileId;
-        // console.log('file id',fileId);
+        console.log('file id',fileId);
         // console.log(`${req.headers.token}`)
         const fileUrl = await getFile(req, fileId);
 
