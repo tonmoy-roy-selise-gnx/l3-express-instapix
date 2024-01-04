@@ -4,12 +4,12 @@ import { v4 as uuidv4 } from 'uuid';
 import fs from 'fs';
 import path from 'path';
 
-interface IMyFile {
-    fieldname: string,
-    originalname: string,
-    encoding: string,
-    mimetype: string,
-    destination: string,
+export interface IMyFile {
+    fieldname?: string,
+    originalname?: string,
+    encoding?: string,
+    mimetype?: string,
+    destination?: string,
     filename: string,
     path: string,
     size: number
@@ -22,13 +22,17 @@ interface IReqData {
     Tags: string[]
 }
 
-export const getPreSignedUrlService = async (req: Request | any) => {
+export const getPreSignedUrlService = async (req: Request) => {
     try {
         // console.log("1st step working well", req.headers?.authorization);
-        const files = req.files; // this is storage file in the application and need to remove after done
+        const files = req.files as IMyFile[]; // this is storage file in the application and need to remove after done
 
         const reqData: IReqData[] = [];
         const fileIds: string[] = [];
+
+        if (!files) {
+            throw "files not found";
+        }
 
         files.map(((item: IMyFile) => {
             const guid = uuidv4(); // ⇨ '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d'
