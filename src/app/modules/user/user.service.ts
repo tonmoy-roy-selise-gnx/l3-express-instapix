@@ -52,7 +52,7 @@ export const userSuggestions = async (loggedInUser: any) => {
 
 export const followingUser = async (loggedInUser: string, userToFollow: string) => {
   try {
-
+    //console.log('-----',loggedInUser, userToFollow);
     // je follow kortey gesey arek user k tar following a shei user add hobey
     //first check if the user is already following the user
     const user = await InstaUser.findOneAndUpdate(

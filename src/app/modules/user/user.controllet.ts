@@ -111,6 +111,7 @@ export const followUser = async (req: Request, res: Response) => {
 export const userDetails=async( req:Request,res:Response)=>{
   try{
     const {userName}=req.params;
+    console.log(userName);
     //console.log(userName);
     const details=await individualUserDetails(userName);
 

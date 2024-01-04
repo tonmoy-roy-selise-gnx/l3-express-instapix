@@ -46,6 +46,7 @@ const instaUserSchema = new Schema<IUser>(
     ],
     avatar: {
       type: [String],
+      default: [],
     },
     bio: {
       type: String,
