@@ -2,27 +2,19 @@ import { Request, Response, NextFunction } from "express";
 import { getFile, getFiles, getPreSignedUrlService, parsedImageUrl, saveFileService } from "./storage.service";
 
 
-export const uploadFile = async (req: Request, res: Response, next: NextFunction) => {
+export const uploadFile = async (req: Request | any, res: Response, next: NextFunction) => {
     try {
-        const files = req.files;
-        console.log(req.files);
-        // if (file.length <= 0) {
-        //     return res.status(400).json({
-        //         status: "error",
-        //         error: "Unable to upload image at this moment"
-        //     })
-        // }
+        const fileIds = await getPreSignedUrlService(req);
 
-        // const fileIds = await getPreSignedUrlService(req);
-        // if (fileIds.length <= 0) {
-        //     return res.status(500).json({
-        //         status: "error",
-        //         error: "Unable to upload image at this moment"
-        //     })
-        // }
+        if (fileIds.length <= 0) {
+            return res.status(500).json({
+                status: "error",
+                error: "Unable to upload image at this moment"
+            })
+        }
 
-        // res.status(200).json(fileIds);
-        res.status(200).json("fileIds");
+        res.status(200).json(fileIds);
+        // res.status(200).json("fileIds");
     } catch (error: any) {
         // console.log("user update error", error);
         if (error?.response) {
