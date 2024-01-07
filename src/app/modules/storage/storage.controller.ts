@@ -4,15 +4,8 @@ import { getFile, getFiles, getPreSignedUrlService, parsedImageUrl, saveFileServ
 
 export const uploadFile = async (req: Request | any, res: Response, next: NextFunction) => {
     try {
-        const file = req.files;
-        if (file.length <= 0) {
-            return res.status(400).json({
-                status: "error",
-                error: "Unable to upload image at this moment"
-            })
-        }
-
         const fileIds = await getPreSignedUrlService(req);
+
         if (fileIds.length <= 0) {
             return res.status(500).json({
                 status: "error",
@@ -21,7 +14,7 @@ export const uploadFile = async (req: Request | any, res: Response, next: NextFu
         }
 
         res.status(200).json(fileIds);
-
+        // res.status(200).json("fileIds");
     } catch (error: any) {
         // console.log("user update error", error);
         if (error?.response) {
@@ -46,7 +39,7 @@ export const uploadFile = async (req: Request | any, res: Response, next: NextFu
 export const imageParser = async (req: Request | any, res: Response) => {
     try {
         const fileId = req.body.fileId;
-        console.log('file id',fileId);
+        console.log('file id', fileId);
         // console.log(`${req.headers.token}`)
         const fileUrl = await getFile(req, fileId);
 

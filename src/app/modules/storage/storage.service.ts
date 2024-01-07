@@ -1,8 +1,6 @@
 import axios from "axios";
 import { Request } from "express";
 import { v4 as uuidv4 } from 'uuid';
-import fs from 'fs';
-import path from 'path';
 
 export interface IMyFile {
     fieldname?: string,
@@ -39,7 +37,7 @@ export const getPreSignedUrlService = async (req: Request) => {
             const tempData = {
                 ItemId: guid,
                 MetaData: {},
-                Name: item?.filename,
+                Name: `${guid}.jpeg`,
                 Tags: [""]
             }
             fileIds.push(guid);
@@ -57,20 +55,11 @@ export const getPreSignedUrlService = async (req: Request) => {
                 },
             });
 
-        // console.log("getUploadRequestUrl", getUploadRequestUrl);
 
         const promiseArr: Promise<any>[] = [];
 
         getUploadRequestUrl.data.map((item: any, index: number) => {
             promiseArr.push(saveFileService(item?.UploadUrl, files[index]));
-
-            fs.unlink(files[index].path, err => {
-                if (err) {
-                    console.error(err);
-                } else {
-                    console.log(`File ${files[index].filename} deleted successfully!`);
-                }
-            });
         })
 
         const uploaded = await Promise.all(promiseArr);
@@ -79,18 +68,18 @@ export const getPreSignedUrlService = async (req: Request) => {
         return fileIds;
 
     } catch (error) {
-        console.log("error from getPreSignedUrlService", error);
+        // console.log("error from getPreSignedUrlService", error);
         throw error;
     }
 }
 
 export const saveFileService = async (url: string, file: any) => {
     try {
-        const imagePath = path.join(__dirname, 'uploads', file.filename); // Replace with your image path
+        // const imagePath = path.join(__dirname, 'uploads', file.buffer); // Replace with your image path
         // const blobData = Buffer.from(imagePath, 'base64');
-        const imageBinary = fs.readFileSync(imagePath);
+        // const imageBinary = file.buffer;
 
-        const response = await axios.put(url, imageBinary, {
+        const response = await axios.put(url, file.buffer, {
             headers: {
                 // "Host": "misterloo.seliselocal.com",
                 'Content-Type': 'text/plain',
@@ -98,7 +87,7 @@ export const saveFileService = async (url: string, file: any) => {
             },
         });
 
-        // console.log(imagePath, response.data);
+        // console.log("final result", file, response.data);
         return response.data;
     } catch (error) {
         console.log("error from saveFileService");
