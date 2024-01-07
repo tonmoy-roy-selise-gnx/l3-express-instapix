@@ -11,7 +11,7 @@ import { NextFunction, Response, Request } from "express";
 //     size: 1146313
 //   }
 
-export const imageCompressionMiddleware = async (req: Request, res: Response, next: NextFunction) => {
+export const imageCompressor = async (req: Request, res: Response, next: NextFunction) => {
     try {
         if (!req.files || !Array.isArray(req.files) || req.files.length === 0) {
             return res.status(400).send({
@@ -22,32 +22,35 @@ export const imageCompressionMiddleware = async (req: Request, res: Response, ne
 
         // Process each file in the provided array
         const data = await Promise.all(
-            req.files.map(async (file: any) => {
+            req.files.map(async (file: Express.Multer.File) => {
                 if (file.size > 10000) {
                     const compressedImageBuffer = await sharp(file.buffer)
                         // .resize({ width: 500 }) // Set the width (you can adjust as needed)
                         .toFormat('jpeg') // Convert the image to JPEG format
-                        .webp({ quality: 4 }) // Set the JPEG quality (0-100)
+                        .jpeg({
+                            quality: 4,
+                            chromaSubsampling: '4:4:4'
+                        }) // Set the JPEG quality (0-100)
                         .toBuffer(); // Get the compressed image as a buffer
 
                     const metadata = await sharp(compressedImageBuffer).metadata();
-                    // console.log(metadata);
 
-                    return { ...file, size: metadata.size, buffer: compressedImageBuffer }
+                    return { ...file, size: metadata.size || 0, buffer: compressedImageBuffer }
                 }
 
                 if (file.size > 4000) {
                     const compressedImageBuffer = await sharp(file.buffer)
                         // .resize({ width: 500 }) // Set the width (you can adjust as needed)
                         .toFormat('jpeg') // Convert the image to JPEG format
-                        .webp({ quality: 20 }) // Set the JPEG quality (0-100)
+                        .jpeg({
+                            quality: 20,
+                            chromaSubsampling: '4:4:4'
+                        }) // Set the JPEG quality (0-100)
                         .toBuffer(); // Get the compressed image as a buffer
 
                     const metadata = await sharp(compressedImageBuffer).metadata();
-                    return { ...file, size: metadata.size, buffer: compressedImageBuffer }
+                    return { ...file, size: metadata.size || 0, buffer: compressedImageBuffer }
                 }
-
-                // console.log(file);
                 return file;
             })
         );
@@ -57,10 +60,12 @@ export const imageCompressionMiddleware = async (req: Request, res: Response, ne
 
         next();
     } catch (error) {
-        // console.error(error);
-        res.status(500).send({
+        console.error("error throw from image compressor middleware");
+        return res.status(500).send({
             status: "error",
             error: 'Error during image compression'
         });
     }
 };
+
+// export default imageCompressor;
