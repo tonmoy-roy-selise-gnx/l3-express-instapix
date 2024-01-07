@@ -23,22 +23,7 @@ export const imageCompressor = async (req: Request, res: Response, next: NextFun
         // Process each file in the provided array
         const data = await Promise.all(
             req.files.map(async (file: Express.Multer.File) => {
-                if (file.size > 10000) {
-                    const compressedImageBuffer = await sharp(file.buffer)
-                        // .resize({ width: 500 }) // Set the width (you can adjust as needed)
-                        .toFormat('jpeg') // Convert the image to JPEG format
-                        .jpeg({
-                            quality: 4,
-                            chromaSubsampling: '4:4:4'
-                        }) // Set the JPEG quality (0-100)
-                        .toBuffer(); // Get the compressed image as a buffer
-
-                    const metadata = await sharp(compressedImageBuffer).metadata();
-
-                    return { ...file, size: metadata.size || 0, buffer: compressedImageBuffer }
-                }
-
-                if (file.size > 4000) {
+                if (file.size > 100000) {
                     const compressedImageBuffer = await sharp(file.buffer)
                         // .resize({ width: 500 }) // Set the width (you can adjust as needed)
                         .toFormat('jpeg') // Convert the image to JPEG format
@@ -49,8 +34,23 @@ export const imageCompressor = async (req: Request, res: Response, next: NextFun
                         .toBuffer(); // Get the compressed image as a buffer
 
                     const metadata = await sharp(compressedImageBuffer).metadata();
+
                     return { ...file, size: metadata.size || 0, buffer: compressedImageBuffer }
                 }
+
+                // if (file.size > 50000) {
+                //     const compressedImageBuffer = await sharp(file.buffer)
+                //         // .resize({ width: 500 }) // Set the width (you can adjust as needed)
+                //         .toFormat('jpeg') // Convert the image to JPEG format
+                //         .jpeg({
+                //             quality: 50,
+                //             chromaSubsampling: '4:4:4'
+                //         }) // Set the JPEG quality (0-100)
+                //         .toBuffer(); // Get the compressed image as a buffer
+
+                //     const metadata = await sharp(compressedImageBuffer).metadata();
+                //     return { ...file, size: metadata.size || 0, buffer: compressedImageBuffer }
+                // }
                 return file;
             })
         );

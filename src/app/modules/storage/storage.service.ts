@@ -59,7 +59,7 @@ export const getFile = async (fileId: string, authorization: string) => {
 export const getFiles = async (fileId: string[], authorization: string) => {
     try {
         const response = await axios.post(`${business_url}/api/storageservice/v22/StorageService/StorageQuery/GetFiles`,
-            { data: fileId },
+            { FileIds: fileId },
             {
                 headers: {
                     'Authorization': `${authorization}`,

@@ -1,24 +1,6 @@
 import { MyRequest } from "../../../middleware/authentication.middleware";
 import InstaPost from "../post/post.model";
 import InstaUser, { IUser } from "./user.model";
-// import Shops from "./user.model";
-
-// export const useIAM = async () => {
-//     try {
-//         console.log("working");
-//         const data = await Shops.find();
-//         console.log(data);
-
-//         // if (!result?.ok) {
-//         //     throw data
-//         // }
-//         return data;
-
-//     } catch (err) {
-//         console.log(err);
-//         throw err;
-//     }
-// }
 
 export const insertUser = async (userData: IUser) => {
   try {
@@ -26,6 +8,8 @@ export const insertUser = async (userData: IUser) => {
 
     return instaUser;
   } catch (error: any) {
+    console.log("error throw from **insertUser user services**");
+
     return error;
   }
 };
@@ -45,10 +29,10 @@ export const userSuggestions = async (loggedInUser: any) => {
 
     return suggestions;
   } catch (error: any) {
+    console.log("error throw from **userSuggestions user services**");
     return error;
   }
 }
-
 
 export const followingUser = async (loggedInUser: string, userToFollow: string) => {
   try {
@@ -70,10 +54,10 @@ export const followingUser = async (loggedInUser: string, userToFollow: string) 
 
     return user;
   } catch (error: any) {
+    console.log("error throw from **followingUser user services**");
     return error;
   }
 }
-
 
 export const individualUserDetails = async (userName: string) => {
   try {
@@ -86,6 +70,7 @@ export const individualUserDetails = async (userName: string) => {
     return { user, totalPost }
 
   } catch (error: any) {
+    console.log("error throw from **individualUserDetails user services**");
     return error;
   }
 }
@@ -108,6 +93,7 @@ export const userDetailsUpdate = async (req: MyRequest) => {
 
     return user;
   } catch (error: any) {
+    console.log("error throw from **userDetailsUpdate user services**");
     return error;
   }
 } 
