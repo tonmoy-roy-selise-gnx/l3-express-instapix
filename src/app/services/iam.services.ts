@@ -24,6 +24,7 @@ export const IAMService = async (req: Request) => {
 
         return response;
     } catch (error) {
+        console.log("error throw from **IAMService IAM services**");
         throw error;
     }
 }
@@ -42,6 +43,7 @@ export const loggedInUserData = async (req: Request) => {
         return response.data;
 
     } catch (error: any) {
+        console.log("error throw from **loggedInUserData IAM services**");
         return error;
     }
 }

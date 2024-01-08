@@ -1,24 +1,6 @@
 import { MyRequest } from "../../../middleware/authentication.middleware";
 import InstaPost from "../post/post.model";
 import InstaUser, { IUser } from "./user.model";
-// import Shops from "./user.model";
-
-// export const useIAM = async () => {
-//     try {
-//         console.log("working");
-//         const data = await Shops.find();
-//         console.log(data);
-
-//         // if (!result?.ok) {
-//         //     throw data
-//         // }
-//         return data;
-
-//     } catch (err) {
-//         console.log(err);
-//         throw err;
-//     }
-// }
 
 export const insertUser = async (userData: IUser) => {
   try {
@@ -26,6 +8,8 @@ export const insertUser = async (userData: IUser) => {
 
     return instaUser;
   } catch (error: any) {
+    console.log("error throw from **insertUser user services**");
+
     return error;
   }
 };
@@ -45,10 +29,10 @@ export const userSuggestions = async (loggedInUser: any) => {
 
     return suggestions;
   } catch (error: any) {
+    console.log("error throw from **userSuggestions user services**");
     return error;
   }
 }
-
 
 export const followingUser = async (loggedInUser: string, userToFollow: string) => {
   try {
@@ -70,44 +54,46 @@ export const followingUser = async (loggedInUser: string, userToFollow: string) 
 
     return user;
   } catch (error: any) {
+    console.log("error throw from **followingUser user services**");
     return error;
   }
 }
 
-
-export const individualUserDetails=async(userName:string)=>{
-  try{
-    console.log(userName)
-    const user=await InstaUser.findOne({userName});
+export const individualUserDetails = async (userName: string) => {
+  try {
+    // console.log(userName);
+    const user = await InstaUser.findOne({ userName });
 
     //calculate how many post a user did by using userName
-    const totalPost=await InstaPost.find({userName}).countDocuments();
-    
-    return {user,totalPost}
+    const totalPost = await InstaPost.find({ userName }).countDocuments();
 
-  }catch(error:any){
+    return { user, totalPost }
+
+  } catch (error: any) {
+    console.log("error throw from **individualUserDetails user services**");
     return error;
   }
 }
 
-export const userDetailsUpdate=async(req:MyRequest)=>{
-  try{
-    const userId=req?.userData?.UserId;
-    const {displayName,bio,phone,avatar}=req.body;
+export const userDetailsUpdate = async (req: MyRequest) => {
+  try {
+    const userId = req?.userData?.UserId;
+    const { displayName, bio, phone, avatar } = req.body;
 
-    const user=await InstaUser.findOneAndUpdate(
-      {userId},
+    const user = await InstaUser.findOneAndUpdate(
+      { userId },
       {
-        displayName:displayName,
-        userPhone:phone,
+        displayName: displayName,
+        userPhone: phone,
         bio,
         avatar
       },
-      {new:true}
+      { new: true }
     );
 
     return user;
-  }catch(error:any){
+  } catch (error: any) {
+    console.log("error throw from **userDetailsUpdate user services**");
     return error;
   }
 } 

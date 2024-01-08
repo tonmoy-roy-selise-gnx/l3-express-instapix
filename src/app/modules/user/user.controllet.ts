@@ -15,13 +15,15 @@ export const useIAMController = async (req: Request, res: Response) => {
       httpOnly: true,
       secure: true,
     });
-    // res.cookie('refresh_token', response.data.refresh_token, { maxAge: maxDate, httpOnly: true, secure: true });
+
     res.cookie("refresh_token", response.data.refresh_token, {
       maxAge: maxDate,
       httpOnly: true,
+      secure: true,
     });
     res.status(response.status).json(response.data);
   } catch (error: any) {
+    console.log("error throw from **useIAMController user controller**");
     if (error.response) {
 
       return res.status(error?.response?.status).json({
@@ -64,6 +66,7 @@ export const createInstaUser = async (
       data: userData,
     });
   } catch (error) {
+    console.log("error throw from **createInstaUser user controller**");
     return res.status(500).json({ error });
   }
 };
@@ -73,6 +76,7 @@ export const loggedInUser = async (req: MyRequest, res: Response) => {
   try {
     res.status(200).json(req?.userData);
   } catch (error) {
+    console.log("error throw from **loggedInUser user controller**");
     return res.status(500).json({ error });
   }
 };
@@ -90,6 +94,7 @@ export const getSuggestions = async (req: MyRequest, res: Response) => {
     return res.status(200).json({ success: true, suggestions });
 
   } catch (error) {
+    console.log("error throw from **getSuggestions user controller**");
     return res.status(500).json({ error });
   }
 };
@@ -104,22 +109,25 @@ export const followUser = async (req: Request, res: Response) => {
     return res.status(200).json({ user, success: true });
 
   } catch (error) {
+    console.log("error throw from **followUser user controller**");
+
     return res.status(500).json({ error });
   }
 };
 
-export const userDetails=async( req:Request,res:Response)=>{
-  try{
-    const {userName}=req.params;
-    console.log(userName);
+export const userDetails = async (req: Request, res: Response) => {
+  try {
+    const { userName } = req.params;
     //console.log(userName);
-    const details=await individualUserDetails(userName);
+    const details = await individualUserDetails(userName);
 
     return res.status(200).json({
-      status:"success",
+      status: "success",
       details
     })
-  }catch(error:any){
+  } catch (error: any) {
+    console.log("error throw from **userDetails user controller**");
+
     res.status(500).json({
       status: "error",
       error: error,
@@ -127,15 +135,17 @@ export const userDetails=async( req:Request,res:Response)=>{
   }
 }
 
-export const updateUser=async(req:MyRequest,res:Response)=>{
-  try{
+export const updateUser = async (req: MyRequest, res: Response) => {
+  try {
 
-    const user= await userDetailsUpdate(req)
+    const user = await userDetailsUpdate(req)
     return res.status(200).json({
-      status:"success",
+      status: "success",
       user
     })
-  }catch(error:any){
+  } catch (error: any) {
+    console.log("error throw from **updateUser user controller**");
+
     res.status(500).json({
       status: "error",
       error: error,
