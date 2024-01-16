@@ -1,15 +1,17 @@
 import mongoose from "mongoose";
 import app from "./app"
+import config from "../config";
 
 const port: number = 5000;
 
-// database connection
+//run server
 async function databaseConnection() {
     try {
-        //await mongoose.connect('mongodb://127.0.0.1:27017/6429FC51-C9A3-4B46-9E5C-DD4DB5A57867');
-        await mongoose.connect('mongodb://selise_dev:4rfvVFR$@10.5.25.13:27017/6429FC51-C9A3-4B46-9E5C-DD4DB5A57867?authSource=admin&authMechanism=SCRAM-SHA-1');
-        //await mongoose.connect('mongodb+srv://amin:0123@cluster0.yz2oh.mongodb.net/insta_clone?retryWrites=true&w=majority');
+        // database connection
+        await mongoose.connect(config.mongoDBConnectionURL);
         console.log("database connect successfully");
+
+        // run application
         app.listen(port, () => {
             console.log(`Server is listening on port ${port} \nopen with http://localhost:5000/ or http://127.0.0.1:5000/`)
         })

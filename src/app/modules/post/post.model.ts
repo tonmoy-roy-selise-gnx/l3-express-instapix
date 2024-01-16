@@ -4,19 +4,24 @@ import { Schema, model } from "mongoose";
 export interface IPost {
   userId: string;
   content: string;
-  comment: [{
+  comment?: [{
     userId: string;
     comment: string;
   }];
-  likedBy: object[];
-  likes: number;
+  likedBy?: string[];
+  likes?: number;
   files: Array<string>;
+  userName: string;
+  userEmail: string;
+  avatar?: string[];
 }
 // 2. Create a Schema corresponding to the document interface.
 const postSchema = new Schema<IPost>(
   {
     userId: {
       type: String,
+      // type: Schema.Types.ObjectId,
+      // ref: "InstUser",
     },
     files: {
       type: [String],
@@ -31,11 +36,20 @@ const postSchema = new Schema<IPost>(
       }], // Use an array of strings
     },
     likedBy: {
-      type: [Object], // Use an array of strings
+      type: [String],
     },
     likes: {
       type: Number,
       default: 0,
+    },
+    userName: {
+      type: String,
+    },
+    userEmail: {
+      type: String,
+    },
+    avatar: {
+      type: [String],
     },
   },
   { minimize: false, timestamps: true, collection: 'InstaPosts' }

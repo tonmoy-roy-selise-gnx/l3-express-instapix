@@ -1,4 +1,4 @@
-import express, { Application, Request, Response } from "express";
+import express, { Application } from "express";
 import cors from "cors";
 import cookieParser from 'cookie-parser';
 import userRouter from './app/modules/user/user.router';
@@ -8,12 +8,10 @@ import postRouter from './app/modules/post/post.router';
 const app: Application = express();
 
 // using cors
-app.use(cors(
-    // {
-    //     origin: true,
-    //     credentials: true
-    // }
-));
+app.use(cors({
+    origin: "*",
+    credentials: true
+}));
 app.use(cookieParser());
 
 // parse data
@@ -23,7 +21,7 @@ app.use(express.urlencoded({ extended: true }));
 // Application Router
 app.use('/user', userRouter);
 app.use('/storage', storageRouter);
-app.use('/insta/user', postRouter);
-
+// app.use('/insta/user', postRouter);
+app.use('/posts', postRouter);
 
 export default app;
